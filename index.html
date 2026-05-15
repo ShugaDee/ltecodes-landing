@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SMS Verification Vending — a next-gen platform for bulk SMS OTP verification across all major platforms. Coming soon.">
+    <title>VerifyFlow — Coming Soon</title>
+    <link rel="icon" href="6.ico">
+    <meta property="og:title" content="VerifyFlow — Coming Soon">
+    <meta property="og:description" content="SMS Verification Vending — a next-gen platform for bulk SMS OTP verification across all major platforms. Coming soon.">
+    <meta property="og:image" content="og-image (3).png">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Floating bubbles layer — renders above everything by default -->
+    <div id="bubbles-layer" aria-hidden="true"></div>
+
+    <div class="page">
+
+
+        <!-- Central content -->
+        <main class="hero">
+            <img src="NoBG%20(7).png" alt="Logo" class="logo-img">
+            <h1>Every OTP.<br>One Source.</h1>
+            <p class="sub">Bulk SMS verification numbers for every platform <br>delivered instantly.</p>
+
+            <form class="notify-form" id="notify-form" onsubmit="handleSubmit(event)">
+                <div class="input-wrap">
+                    <label for="email-input" class="sr-only">Email address</label>
+                    <input type="email" id="email-input" class="flat-input" placeholder="your@email.com" required
+                        autocomplete="email">
+                    <button type="submit" class="btn-notify" id="notify-btn">Notify Me</button>
+                </div>
+                <p class="form-sub form-message" id="form-message">No spam. Just a heads-up when we launch.</p>
+            </form>
+        </main>
+
+        <!-- Pot scene: fixed to bottom, outside page flow -->
+        <div class="scene" aria-hidden="true">
+
+
+            <!-- The pot: clipped to hide the fire/logs section -->
+            <div class="pot-wrap">
+                <div class="vapor-glow"></div>
+                <div class="pot-clip">
+                    <img src="background.webp" alt="Cauldron" class="pot-img">
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+</body>
+
+</html>

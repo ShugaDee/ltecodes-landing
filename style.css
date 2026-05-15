@@ -1,0 +1,370 @@
+/* ===========================
+   RESET & TOKENS
+   =========================== */
+:root {
+    --bg:           #080808;
+    --border:       rgba(255,255,255,0.07);
+
+    --text-1:       #ffffff;
+    --text-2:       #888888;
+    --text-3:       #3a3a3a;
+
+    --neon:         #00ffb2;
+    --neon-dim:     rgba(0, 255, 178, 0.18);
+    --neon-mid:     rgba(0, 255, 178, 0.45);
+
+    --blue:         #2563eb;
+    --blue-hover:   #1d4ed8;
+
+    --font: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--font);
+    position: relative;
+}
+
+/* ===========================
+   BUBBLE LAYER
+   -- sits above everything by default,
+   -- but collapses when input focused
+   =========================== */
+#bubbles-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    /* Above all page content */
+    z-index: 100;
+    transition: opacity 0.4s ease;
+}
+
+body.input-focused #bubbles-layer {
+    /* Fade almost away so user can type comfortably */
+    opacity: 0.08;
+    z-index: 1; /* drop behind the page stacking context */
+}
+
+/* ===========================
+   PAGE — fixed full-screen grid
+   header | main | pot-scene
+   =========================== */
+.page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    /* Reserve space at bottom for the pot */
+    padding-bottom: clamp(200px, 30vh, 290px);
+}
+
+
+/* ===========================
+   HERO
+   =========================== */
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(10px, 2vh, 30px) clamp(20px, 5vw, 60px) 0;
+    position: relative;
+    z-index: 10;
+}
+
+
+h1 {
+    font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: clamp(10px, 1.5vh, 18px);
+}
+
+.sub {
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    color: var(--text-2);
+    max-width: 440px;
+    line-height: 1.65;
+    margin-bottom: clamp(24px, 4vh, 44px);
+}
+
+/* ===========================
+   NOTIFY FORM
+   -- z-index 200 so it beats bubbles on focus
+   =========================== */
+.notify-form {
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    /* Isolated stacking context */
+    isolation: isolate;
+    z-index: 200;
+}
+
+.input-wrap {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.25s ease;
+    gap: 12px;
+}
+
+.input-wrap:focus-within {
+    border-bottom-color: rgba(255,255,255,0.3);
+}
+
+.flat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 13px 0;
+    font-size: 1rem;
+    font-family: var(--font);
+    color: var(--text-1);
+    caret-color: var(--neon);
+    min-width: 0;
+}
+
+.flat-input::placeholder {
+    color: var(--text-3);
+}
+
+.btn-notify {
+    flex-shrink: 0;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: background 0.18s ease;
+    white-space: nowrap;
+}
+
+.btn-notify:hover  { background: var(--blue-hover); }
+.btn-notify:active { transform: scale(0.97); }
+
+.form-sub {
+    font-size: 0.72rem;
+    color: var(--text-3);
+    margin-top: 10px;
+    text-align: left;
+}
+
+/* ===========================
+   POT SCENE — fixed to viewport bottom
+   =========================== */
+.scene {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: visible;
+    z-index: 10;
+    width: clamp(280px, 38vw, 460px);
+    pointer-events: none;
+}
+
+/* ===========================
+   DYNAMIC VAPOR & SURFACE BUBBLES
+   =========================== */
+.vapor-streak {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(0, 255, 178, 0.25);
+    box-shadow: 0 0 20px 10px rgba(0, 255, 178, 0.15);
+    filter: blur(14px);
+    pointer-events: none;
+    z-index: 12;
+    animation: riseVapor linear forwards;
+}
+
+@keyframes riseVapor {
+    0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+    20%  { opacity: 0.8; }
+    80%  { opacity: 0.5; }
+    100% { transform: translateY(-160px) translateX(var(--drift)) scale(1.6); opacity: 0; }
+}
+
+.surface-bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(0,255,178,0.4);
+    border: 1px solid rgba(0,255,178,0.6);
+    box-shadow: 0 0 6px rgba(0,255,178,0.3);
+    pointer-events: none;
+    z-index: 11;
+    animation: popSurface linear forwards;
+}
+
+@keyframes popSurface {
+    0%   { transform: translateY(0) scale(0.5); opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { transform: translateY(-15px) translateX(var(--drift)) scale(1.1); opacity: 0.8; }
+    100% { transform: translateY(-20px) translateX(var(--drift)) scale(2); opacity: 0; }
+}
+
+/* ===========================
+   POT IMAGE — clipped to hide fire/logs
+   =========================== */
+.pot-wrap {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Base glowing vapor resting at the pot opening */
+.vapor-glow {
+    position: absolute;
+    top: -15px; /* Centered around the rim */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    height: 40px;
+    background: rgba(0, 255, 178, 0.35);
+    box-shadow: 0 0 50px 35px rgba(0, 255, 178, 0.25);
+    border-radius: 50%;
+    filter: blur(15px);
+    pointer-events: none;
+    z-index: 15;
+    animation: vaporPulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes vaporPulse {
+    0%   { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
+    100% { opacity: 0.85; transform: translateX(-50%) scale(1.05); }
+}
+
+/* Clip container: show the middle slice of the image (cauldron body and handles).
+   The empty top and the fire/logs at the bottom are hidden. */
+.pot-clip {
+    width: 100%;
+    overflow: hidden;
+    /* This aspect ratio determines how much vertical slice to show.
+       It shows about 30% of the image's total height. */
+    aspect-ratio: 1 / 0.36;
+    position: relative;
+    /* Push the clip container down so its bottom aligns with viewport bottom */
+    margin-bottom: -10px;
+}
+
+.pot-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Shift the image up by 34% of its own height to hide the empty white space above the cauldron */
+    transform: translateY(-34%);
+}
+
+/* ===========================
+   BUBBLES
+   =========================== */
+.bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(0,255,178,0.05);
+    border: 1px solid rgba(0,255,178,0.28);
+    box-shadow:
+        0 0 6px  rgba(0,255,178,0.12),
+        inset 0 0 6px rgba(0,255,178,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    backdrop-filter: blur(1px);
+    animation: floatUp linear forwards;
+}
+
+.bubble img {
+    width: 54%;
+    height: 54%;
+    object-fit: contain;
+    filter: brightness(0) invert(1) opacity(0.82);
+}
+
+@keyframes floatUp {
+    0%   { transform: translateY(0)    translateX(0)   scale(0.35); opacity: 0;   }
+    10%  { transform: translateY(-25px)               scale(1);    opacity: 1;   }
+    82%  {                                                          opacity: 0.65;}
+    100% { transform: translateY(-80vh) translateX(var(--drift))   scale(1.08);  opacity: 0;  }
+}
+
+/* ===========================
+   RESPONSIVE TWEAKS
+   =========================== */
+@media (max-width: 480px) {
+
+    .notify-form { padding: 0 2px; }
+
+    .btn-notify {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+    h1 { font-size: clamp(2rem, 9vw, 3rem); }
+}
+
+/* ===========================
+   ACCESSIBILITY & UTILITIES
+   =========================== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.logo-img {
+    max-height: 120px;
+    width: auto;
+    margin-bottom: clamp(12px, 1vh, 20px);
+}
+
+.form-message {
+    transition: color 0.3s ease;
+}
+
+/* Pause animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
